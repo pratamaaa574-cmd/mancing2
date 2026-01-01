@@ -1,0 +1,270 @@
+--====================================================
+-- BENJAMIN | FISH IT
+-- SEMI PERFECT VERSION | DELTA READY
+--====================================================
+
+-- SERVICES
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local VirtualUser = game:GetService("VirtualUser")
+local UIS = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
+
+local player = Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+player.CharacterAdded:Connect(function(c) char = c end)
+
+--====================================================
+-- STATES
+--====================================================
+_G.AutoFish = false
+_G.FishMode = "Legit"
+_G.AutoSell = false
+_G.AutoBuyWeather = false
+_G.AntiAFK = true
+_G.FreezeChar = false
+_G.FPSBoost = false
+
+--====================================================
+-- GUI
+--====================================================
+local gui = Instance.new("ScreenGui", player.PlayerGui)
+gui.ResetOnSpawn = false
+
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.fromOffset(620,380)
+main.Position = UDim2.fromScale(0.5,0.5)
+main.AnchorPoint = Vector2.new(0.5,0.5)
+main.BackgroundColor3 = Color3.fromRGB(255,182,193)
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,12)
+
+local left = Instance.new("Frame", main)
+left.Size = UDim2.fromOffset(170,380)
+left.BackgroundColor3 = Color3.fromRGB(255,105,180)
+
+local right = Instance.new("Frame", main)
+right.Position = UDim2.fromOffset(170,0)
+right.Size = UDim2.fromOffset(450,380)
+right.BackgroundColor3 = Color3.fromRGB(255,192,203)
+
+-- TITLE
+local title = Instance.new("TextLabel", left)
+title.Size = UDim2.new(1,0,0,50)
+title.Text = "BENJAMIN"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 24
+title.TextColor3 = Color3.new(1,1,1)
+title.BackgroundColor3 = Color3.fromRGB(255,20,147)
+title.BorderSizePixel = 0
+
+--====================================================
+-- DRAG GUI
+--====================================================
+do
+    local dragging, dragStart, startPos
+    title.InputBegan:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = i.Position
+            startPos = main.Position
+        end
+    end)
+    title.InputEnded:Connect(function(i)
+        if i.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
+    end)
+    UIS.InputChanged:Connect(function(i)
+        if dragging and i.UserInputType == Enum.UserInputType.MouseMovement then
+            local d = i.Position - dragStart
+            main.Position = UDim2.new(
+                startPos.X.Scale, startPos.X.Offset + d.X,
+                startPos.Y.Scale, startPos.Y.Offset + d.Y
+            )
+        end
+    end)
+end
+
+--====================================================
+-- MINIMIZE & CLOSE
+--====================================================
+local minBtn = Instance.new("TextButton", title)
+minBtn.Size = UDim2.fromOffset(30,30)
+minBtn.Position = UDim2.new(1,-70,0,10)
+minBtn.Text = "—"
+minBtn.Font = Enum.Font.GothamBold
+minBtn.TextSize = 22
+minBtn.TextColor3 = Color3.new(1,1,1)
+minBtn.BackgroundTransparency = 1
+
+local closeBtn = Instance.new("TextButton", title)
+closeBtn.Size = UDim2.fromOffset(30,30)
+closeBtn.Position = UDim2.new(1,-35,0,10)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 18
+closeBtn.TextColor3 = Color3.new(1,1,1)
+closeBtn.BackgroundTransparency = 1
+
+local minimized = false
+local fullSize = main.Size
+
+minBtn.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    right.Visible = not minimized
+    main.Size = minimized and UDim2.fromOffset(620,50) or fullSize
+end)
+
+-- FLOAT BUTTON
+local openBtn = Instance.new("TextButton", gui)
+openBtn.Size = UDim2.fromOffset(120,40)
+openBtn.Position = UDim2.fromScale(0.02,0.5)
+openBtn.Text = "🐟 BENJAMIN"
+openBtn.Font = Enum.Font.GothamBold
+openBtn.TextSize = 14
+openBtn.TextColor3 = Color3.new(1,1,1)
+openBtn.BackgroundColor3 = Color3.fromRGB(255,105,180)
+openBtn.Visible = false
+Instance.new("UICorner", openBtn).CornerRadius = UDim.new(0,10)
+
+closeBtn.MouseButton1Click:Connect(function()
+    gui.Enabled = false
+    openBtn.Visible = true
+end)
+
+openBtn.MouseButton1Click:Connect(function()
+    gui.Enabled = true
+    openBtn.Visible = false
+end)
+
+--====================================================
+-- HELPERS
+--====================================================
+local function clear()
+    for _,v in pairs(right:GetChildren()) do
+        if v:IsA("TextButton") then v:Destroy() end
+    end
+end
+
+local function btn(txt,y,cb)
+    local b = Instance.new("TextButton", right)
+    b.Size = UDim2.new(1,-20,0,30)
+    b.Position = UDim2.fromOffset(10,y)
+    b.Text = txt
+    b.Font = Enum.Font.Gotham
+    b.TextSize = 14
+    b.TextColor3 = Color3.new(1,1,1)
+    b.BackgroundColor3 = Color3.fromRGB(255,105,180)
+    b.BorderSizePixel = 0
+    b.MouseButton1Click:Connect(cb)
+end
+
+local function leftBtn(txt,y,cb)
+    local b = Instance.new("TextButton", left)
+    b.Size = UDim2.new(1,0,0,40)
+    b.Position = UDim2.fromOffset(0,y)
+    b.Text = txt
+    b.Font = Enum.Font.GothamBold
+    b.TextSize = 14
+    b.TextColor3 = Color3.new(1,1,1)
+    b.BackgroundColor3 = Color3.fromRGB(255,20,147)
+    b.BorderSizePixel = 0
+    b.MouseButton1Click:Connect(cb)
+end
+
+--====================================================
+-- PAGES
+--====================================================
+local function Fishing()
+    clear()
+    btn("Auto Fishing : "..tostring(_G.AutoFish),20,function()
+        _G.AutoFish = not _G.AutoFish
+        Fishing()
+    end)
+    btn("Mode : ".._G.FishMode,60,function()
+        _G.FishMode = (_G.FishMode=="Legit" and "Instant") or (_G.FishMode=="Instant" and "Blatant") or "Legit"
+        Fishing()
+    end)
+end
+
+local function Auto()
+    clear()
+    btn("Auto Sell : "..tostring(_G.AutoSell),20,function()
+        _G.AutoSell = not _G.AutoSell
+        Auto()
+    end)
+    btn("Auto Buy Weather : "..tostring(_G.AutoBuyWeather),60,function()
+        _G.AutoBuyWeather = not _G.AutoBuyWeather
+        Auto()
+    end)
+end
+
+local function Teleport()
+    clear()
+    local y = 20
+    for _,v in pairs(workspace:GetChildren()) do
+        if v:IsA("Model") then
+            local p = v:FindFirstChildWhichIsA("BasePart",true)
+            if p then
+                btn("TP : "..v.Name,y,function()
+                    char:PivotTo(p.CFrame + Vector3.new(0,5,0))
+                end)
+                y += 35
+            end
+        end
+    end
+end
+
+local function Setting()
+    clear()
+    btn("Freeze Character : "..tostring(_G.FreezeChar),20,function()
+        _G.FreezeChar = not _G.FreezeChar
+        Setting()
+    end)
+    btn("Boost FPS : "..tostring(_G.FPSBoost),60,function()
+        _G.FPSBoost = not _G.FPSBoost
+        Setting()
+    end)
+end
+
+--====================================================
+-- SIDEBAR
+--====================================================
+leftBtn("🐟 Fishing",50,Fishing)
+leftBtn("Automatically",90,Auto)
+leftBtn("Teleport",130,Teleport)
+leftBtn("Setting",170,Setting)
+
+Fishing()
+
+--====================================================
+-- SYSTEM LOOP
+--====================================================
+RunService.Stepped:Connect(function()
+    if _G.FreezeChar and char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.Anchored = true
+    elseif char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.Anchored = false
+    end
+end)
+
+-- FPS BOOST
+task.spawn(function()
+    while task.wait(1) do
+        if _G.FPSBoost then
+            Lighting.GlobalShadows = false
+            Lighting.FogEnd = 9e9
+            for _,v in pairs(Lighting:GetChildren()) do
+                if v:IsA("PostEffect") then v.Enabled = false end
+            end
+        end
+    end
+end)
+
+-- ANTI AFK
+player.Idled:Connect(function()
+    if _G.AntiAFK then
+        VirtualUser:Button2Down(Vector2.new(),workspace.CurrentCamera.CFrame)
+        task.wait(1)
+        VirtualUser:Button2Up(Vector2.new(),workspace.CurrentCamera.CFrame)
+    end
+end)
