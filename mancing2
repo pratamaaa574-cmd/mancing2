@@ -1,7 +1,6 @@
 --====================================================
--- BENJAMIN X | FINAL UI V3
--- ANIMATED MINIMIZE | FPS BOOST | ICON LOGO
--- DELTA READY
+-- BENJAMIN X | STABLE FINAL
+-- MINIMIZE ICON FIXED | DELTA SAFE
 --====================================================
 
 local Players = game:GetService("Players")
@@ -16,71 +15,52 @@ pcall(function()
     player.PlayerGui:FindFirstChild("BENJAMIN_X"):Destroy()
 end)
 
--- GLOBAL
-_G.BX = {
-    AutoFish = false,
-    Mode = "Legit",
-    FPS = false
-}
-
--- GUI
+-- GUI ROOT
 local gui = Instance.new("ScreenGui", player.PlayerGui)
 gui.Name = "BENJAMIN_X"
 gui.ResetOnSpawn = false
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- MAIN
+-- MAIN FRAME
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.fromOffset(560,340)
+main.Size = UDim2.fromOffset(520,320)
 main.Position = UDim2.fromScale(0.5,0.5)
 main.AnchorPoint = Vector2.new(0.5,0.5)
-main.BackgroundColor3 = Color3.fromRGB(15,15,15)
+main.BackgroundColor3 = Color3.fromRGB(20,20,20)
 main.BackgroundTransparency = 0.15
 main.BorderSizePixel = 0
-Instance.new("UICorner", main).CornerRadius = UDim.new(0,14)
+main.ZIndex = 5
+Instance.new("UICorner", main).CornerRadius = UDim.new(0,12)
 
--- DRAG
-do
-    local drag, start, pos
-    main.InputBegan:Connect(function(i)
-        if i.UserInputType == Enum.UserInputType.MouseButton1 then
-            drag = true
-            start = i.Position
-            pos = main.Position
-        end
-    end)
-    UIS.InputChanged:Connect(function(i)
-        if drag and i.UserInputType == Enum.UserInputType.MouseMovement then
-            local d = i.Position - start
-            main.Position = UDim2.new(pos.X.Scale,pos.X.Offset+d.X,pos.Y.Scale,pos.Y.Offset+d.Y)
-        end
-    end)
-    UIS.InputEnded:Connect(function() drag = false end)
-end
-
--- TOP BAR
+--================ TOP BAR =================
 local top = Instance.new("Frame", main)
-top.Size = UDim2.new(1,0,0,40)
-top.BackgroundTransparency = 1
+top.Size = UDim2.new(1,0,0,38)
+top.BackgroundColor3 = Color3.fromRGB(25,25,25)
+top.BorderSizePixel = 0
+top.ZIndex = 6
 
 local title = Instance.new("TextLabel", top)
 title.Text = "BENJAMIN X"
 title.Font = Enum.Font.GothamBold
-title.TextSize = 17
+title.TextSize = 16
 title.TextColor3 = Color3.new(1,1,1)
 title.BackgroundTransparency = 1
-title.Position = UDim2.fromOffset(15,0)
-title.Size = UDim2.new(1,-90,1,0)
+title.Position = UDim2.fromOffset(12,0)
+title.Size = UDim2.new(1,-100,1,0)
 title.TextXAlignment = Left
+title.ZIndex = 7
 
 -- CLOSE
 local close = Instance.new("TextButton", top)
-close.Size = UDim2.fromOffset(24,24)
-close.Position = UDim2.new(1,-30,0,8)
+close.Size = UDim2.fromOffset(22,22)
+close.Position = UDim2.new(1,-28,0,8)
 close.Text = "✕"
 close.Font = Enum.Font.GothamBold
 close.TextSize = 14
 close.BackgroundColor3 = Color3.fromRGB(180,60,60)
 close.TextColor3 = Color3.new(1,1,1)
+close.BorderSizePixel = 0
+close.ZIndex = 8
 Instance.new("UICorner", close).CornerRadius = UDim.new(1,0)
 
 close.MouseButton1Click:Connect(function()
@@ -89,33 +69,37 @@ end)
 
 -- MINIMIZE
 local minimize = Instance.new("TextButton", top)
-minimize.Size = UDim2.fromOffset(24,24)
-minimize.Position = UDim2.new(1,-60,0,8)
+minimize.Size = UDim2.fromOffset(22,22)
+minimize.Position = UDim2.new(1,-56,0,8)
 minimize.Text = "–"
 minimize.Font = Enum.Font.GothamBold
 minimize.TextSize = 18
-minimize.BackgroundColor3 = Color3.fromRGB(80,80,80)
+minimize.BackgroundColor3 = Color3.fromRGB(90,90,90)
 minimize.TextColor3 = Color3.new(1,1,1)
+minimize.BorderSizePixel = 0
+minimize.ZIndex = 8
 Instance.new("UICorner", minimize).CornerRadius = UDim.new(1,0)
 
--- MINI ICON
+--================ MINI ICON =================
 local mini = Instance.new("Frame", gui)
-mini.Size = UDim2.fromOffset(52,52)
+mini.Size = UDim2.fromOffset(48,48)
 mini.Position = UDim2.fromScale(0.5,0.8)
 mini.Visible = false
 mini.BackgroundColor3 = Color3.fromRGB(255,105,180)
 mini.BorderSizePixel = 0
+mini.ZIndex = 20
 Instance.new("UICorner", mini).CornerRadius = UDim.new(1,0)
 
 local icon = Instance.new("ImageLabel", mini)
-icon.Size = UDim2.new(1,-10,1,-10)
-icon.Position = UDim2.fromOffset(5,5)
+icon.Size = UDim2.new(1,-8,1,-8)
+icon.Position = UDim2.fromOffset(4,4)
 icon.Image = ICON_ID
 icon.BackgroundTransparency = 1
+icon.ZIndex = 21
 
 -- DRAG MINI
 do
-    local drag, start, pos
+    local drag,start,pos
     mini.InputBegan:Connect(function(i)
         if i.UserInputType == Enum.UserInputType.MouseButton1 then
             drag = true
@@ -132,58 +116,57 @@ do
     UIS.InputEnded:Connect(function() drag = false end)
 end
 
--- ANIMATION
+--================ CONTENT =================
+local label = Instance.new("TextLabel", main)
+label.Text = "GUI Loaded Successfully"
+label.Font = Enum.Font.Gotham
+label.TextSize = 14
+label.TextColor3 = Color3.new(1,1,1)
+label.BackgroundTransparency = 1
+label.Position = UDim2.fromOffset(20,60)
+label.Size = UDim2.new(1,-40,0,30)
+label.ZIndex = 6
+
+--================ FPS BOOST =================
+local fpsBtn = Instance.new("TextButton", main)
+fpsBtn.Text = "FPS BOOST"
+fpsBtn.Size = UDim2.fromOffset(120,28)
+fpsBtn.Position = UDim2.fromOffset(20,100)
+fpsBtn.BackgroundColor3 = Color3.fromRGB(255,105,180)
+fpsBtn.TextColor3 = Color3.new(1,1,1)
+fpsBtn.Font = Enum.Font.Gotham
+fpsBtn.TextSize = 13
+fpsBtn.BorderSizePixel = 0
+fpsBtn.ZIndex = 6
+Instance.new("UICorner", fpsBtn).CornerRadius = UDim.new(0,8)
+
+fpsBtn.MouseButton1Click:Connect(function()
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+    Lighting.GlobalShadows = false
+    Lighting.FogEnd = 9e9
+    for _,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("ParticleEmitter") or v:IsA("Trail") then
+            v.Enabled = false
+        end
+    end
+    fpsBtn.Text = "FPS BOOSTED"
+end)
+
+--================ ANIMATED MINIMIZE =================
 minimize.MouseButton1Click:Connect(function()
     TweenService:Create(main,TweenInfo.new(0.25),
-        {Size = UDim2.fromOffset(480,280), BackgroundTransparency = 1}):Play()
+        {Size = UDim2.fromOffset(450,260), BackgroundTransparency = 1}):Play()
     task.wait(0.25)
     main.Visible = false
     mini.Visible = true
-    mini.Size = UDim2.fromOffset(10,10)
-    TweenService:Create(mini,TweenInfo.new(0.25,Enum.EasingStyle.Back),
-        {Size = UDim2.fromOffset(52,52)}):Play()
 end)
 
 mini.InputBegan:Connect(function(i)
     if i.UserInputType == Enum.UserInputType.MouseButton1 then
         mini.Visible = false
         main.Visible = true
-        main.Size = UDim2.fromOffset(480,280)
+        main.Size = UDim2.fromOffset(450,260)
         TweenService:Create(main,TweenInfo.new(0.25,Enum.EasingStyle.Back),
-            {Size = UDim2.fromOffset(560,340), BackgroundTransparency = 0.15}):Play()
+            {Size = UDim2.fromOffset(520,320), BackgroundTransparency = 0.15}):Play()
     end
-end)
-
--- FPS BOOST FUNCTION
-local function FPSBoost()
-    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-    Lighting.GlobalShadows = false
-    Lighting.FogEnd = 9e9
-    Lighting.Brightness = 1
-
-    for _,v in pairs(workspace:GetDescendants()) do
-        if v:IsA("BasePart") then
-            v.Material = Enum.Material.Plastic
-            v.CastShadow = false
-        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-            v.Enabled = false
-        end
-    end
-end
-
--- SIMPLE SETTING BUTTON
-local btn = Instance.new("TextButton", main)
-btn.Text = "FPS BOOST"
-btn.Size = UDim2.fromOffset(120,30)
-btn.Position = UDim2.fromOffset(20,60)
-btn.BackgroundColor3 = Color3.fromRGB(255,105,180)
-btn.TextColor3 = Color3.new(1,1,1)
-btn.Font = Enum.Font.Gotham
-btn.TextSize = 13
-Instance.new("UICorner", btn).CornerRadius = UDim.new(0,8)
-
-btn.MouseButton1Click:Connect(function()
-    _G.BX.FPS = not _G.BX.FPS
-    if _G.BX.FPS then FPSBoost() end
-    btn.Text = "FPS BOOST : "..tostring(_G.BX.FPS)
 end)
